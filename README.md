@@ -1,6 +1,6 @@
-# Insert AmazonPoints in the Wishlist (buttix)
+# Insert AmazonPoints in the Wishlist (tacores)
 
-AmazonのWishlistに入っているKindle本のAmazonポイントを表示させる拡張（の、buttixによる拡張）
+AmazonのWishlistに入っているKindle本のAmazonポイントを表示させる拡張（の、tacoresによる拡張）
 
 * 最近のAmazon側のDOM変更("total-points-value-display-column")に対応
 * 一定以上のポイント還元率でdevコンソール出力する機能を追加
