@@ -1,3 +1,5 @@
+const CONSOLE_OUTPUT_RATE = 30;
+
 window.addEventListener("load",function(eve){
 	//options.htmlで設定した値をAmazonのローカルストレージに移す
 	chrome.runtime.sendMessage({method: "getLocalStorage", key1: "fetchType",key2:"loadType",key3:"delayTime"}, function(response) {
@@ -47,14 +49,38 @@ function wishpoints(enablefetch){
 			fetch('https://www.amazon.co.jp/dp/'+asin)
 			.then(res=>res.text())
 			.then(text=>{
-			const lopoints = dom_parser.parseFromString(text, "text/html").getElementsByClassName("loyalty-points");
+			const doc = dom_parser.parseFromString(text, "text/html");
+			const title = doc.getElementsByTagName('title')[0].innerText.split('|')[0];
+			const kindle_price = doc.getElementById('kindle-price');
+			if (kindle_price == undefined) {
+				return;
+			}
+
+			const price = kindle_price.textContent.trim().replace(/,/g, "").match(/\d+/g)[0];
+			const lopoints = doc.getElementsByClassName("loyalty-points");
 			//debug
 			//console.log(lopoints);
 			//loyalty-pointsがない場合にはエラーが出るため存在判定
 			let points = "";
+			let rate = "";
 			if(lopoints.length!=0){
 				points = lopoints[0].children[1].innerText.trim();
+				const matches = points.match(/\d+/g);	// （例）441ポイント (64%)
+				rate = matches[1];
 				item.firstElementChild.insertAdjacentHTML("beforeend", " " + points);
+			} else {
+				const totalpoints = doc.getElementsByClassName("total-points-value-display-column");
+				if(totalpoints.length != 0) {
+					points = totalpoints[1].children[0].innerText.trim();
+					const matches = points.match(/\d+/g);	//（例）+40 ポイント
+					rate = parseInt(matches[0] / price * 100);
+					const point_text = matches[0] + "ポイント (" + rate + "%)";
+					item.firstElementChild.insertAdjacentHTML("beforeend", " " + point_text);
+				}
+			}
+
+			if( rate >= CONSOLE_OUTPUT_RATE) {
+				console.log(title + " " + rate + "%");
 			}
 			//debug
 			//console.log(points);
@@ -82,7 +108,7 @@ function wishpoints(enablefetch){
 		}
 	}
 	//debug
-	console.log(itemList.length);
+	//console.log(itemList.length);
 	//セッションストレージに現在の読み込み数を記録
 	sessionStorage.setItem("storageItemNum", itemList.length);
 }
