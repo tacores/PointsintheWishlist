@@ -13,6 +13,6 @@ https://github.com/sytkm/PointsintheWishlist
 本を購入する場合は、必ず商品ページでポイントに間違いがないことを確認してから購入してください
 
 ## License
-Copyright (c) 2023 buttix
+Copyright (c) 2023 tacores
 Released under the MIT license
 http://opensource.org/licenses/mit-license.php
