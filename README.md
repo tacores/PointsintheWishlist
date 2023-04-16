@@ -9,6 +9,9 @@ AmazonのWishlistに入っているKindle本のAmazonポイントを表示させ
 ## フォーク元
 https://github.com/sytkm/PointsintheWishlist
 
+## 注意
+本を購入する場合は、必ず商品ページでポイントに間違いがないことを確認してから購入してください
+
 ## License
 Copyright (c) 2023 buttix
 Released under the MIT license
