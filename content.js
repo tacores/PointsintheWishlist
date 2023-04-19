@@ -43,6 +43,14 @@ function wishpoints(enablefetch){
 	//以前に調べてないアイテムに対しfetchを行う
 	for(let item of Array.from(itemList).slice(olditemnum)){
 		const asin = JSON.parse(item.attributes["data-item-prime-info"].value).asin;
+		const price_drop = item.parentElement.parentElement.getElementsByClassName("itemPriceDrop");
+		let price_drop_rate = 0;
+		if(price_drop.length > 0) {
+			const match = price_drop[0].innerText.match(/\d+%/);
+			if(match) {
+				price_drop_rate = parseInt(match[0].replace('%', ''));
+			}
+		}
 
 		if(enablefetch){
 			//console.log("fetch");
@@ -80,7 +88,10 @@ function wishpoints(enablefetch){
 			}
 
 			if( rate >= CONSOLE_OUTPUT_RATE) {
-				console.log(title + " " + rate + "%");
+				console.log(title + " " + rate + "%（ポイント）");
+			}
+			if( price_drop_rate >= CONSOLE_OUTPUT_RATE) {
+				console.log(title + " " + price_drop_rate + "%（価格）");
 			}
 			//debug
 			//console.log(points);
