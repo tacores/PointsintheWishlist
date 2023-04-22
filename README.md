@@ -3,10 +3,14 @@
 Amazonウィッシュリストに入っているKindle本のAmazonポイントを表示するChrome拡張（の、tacoresによる拡張）
 
 * Amazon側のDOM変更("total-points-value-display-column")に対応
-* 一定以上のポイント還元率でdevコンソール出力する機能を追加
-* ポイント還元だけでなく、価格が一定以上下がった場合もコンソール出力する
+* 一定以上の割引率でdevコンソール出力する機能を追加
 
-### コンソール出力する閾値設定
+### devコンソール出力する条件
+    * Kindleのポイント還元率
+    * Kindleの価格下落率
+    * Kindle以外の場合、特選タイムセールの割引率
+
+### devコンソール出力する閾値設定
 `const CONSOLE_OUTPUT_RATE = 30;`
 
 ## インストール方法

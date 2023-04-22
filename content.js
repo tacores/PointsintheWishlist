@@ -43,15 +43,6 @@ function wishpoints(enablefetch){
 	//以前に調べてないアイテムに対しfetchを行う
 	for(let item of Array.from(itemList).slice(olditemnum)){
 		const asin = JSON.parse(item.attributes["data-item-prime-info"].value).asin;
-		const price_drop = item.parentElement.parentElement.getElementsByClassName("itemPriceDrop");
-		let price_drop_rate = 0;
-		if(price_drop.length > 0) {
-			const match = price_drop[0].innerText.match(/\d+%/);
-			if(match) {
-				price_drop_rate = parseInt(match[0].replace('%', ''));
-			}
-		}
-
 		if(enablefetch){
 			//console.log("fetch");
 			fetch('https://www.amazon.co.jp/dp/'+asin)
@@ -60,7 +51,21 @@ function wishpoints(enablefetch){
 			const doc = dom_parser.parseFromString(text, "text/html");
 			const title = doc.getElementsByTagName('title')[0].innerText.split('|')[0];
 			const kindle_price = doc.getElementById('kindle-price');
+
+			// Kindle以外の場合、特選タイムセールだけチェックする
 			if (kindle_price == undefined) {
+				let deal_rich_rate = 0;
+				const deal_rich = item.parentElement.parentElement.getElementsByClassName("wl-deal-rich-badge-label");
+				if(deal_rich.length > 0) {
+					const match = deal_rich[0].innerText.match(/\d+%/);
+					if(match) {
+						deal_rich_rate = parseInt(match[0].replace('%', ''));
+					}
+				}
+				if( deal_rich_rate >= CONSOLE_OUTPUT_RATE ) {
+					const title_no_kindle = doc.getElementsByTagName('title')[0].innerText.split('|')[1].trim();
+					console.log(title_no_kindle + " " + deal_rich_rate + "%（特選タイムセール）");
+				}
 				return;
 			}
 
@@ -87,12 +92,23 @@ function wishpoints(enablefetch){
 				}
 			}
 
+			// 価格下落率
+			const price_drop = item.parentElement.parentElement.getElementsByClassName("itemPriceDrop");
+			let price_drop_rate = 0;
+			if(price_drop.length > 0) {
+				const match = price_drop[0].innerText.match(/\d+%/);
+				if(match) {
+					price_drop_rate = parseInt(match[0].replace('%', ''));
+				}
+			}
+	
 			if( rate >= CONSOLE_OUTPUT_RATE) {
 				console.log(title + " " + rate + "%（ポイント）");
 			}
 			if( price_drop_rate >= CONSOLE_OUTPUT_RATE) {
 				console.log(title + " " + price_drop_rate + "%（価格）");
 			}
+
 			//debug
 			//console.log(points);
 		}).catch(err=>console.error(err));
