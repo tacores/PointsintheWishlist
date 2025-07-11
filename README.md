@@ -12,7 +12,10 @@ Amazonウィッシュリストに入っているKindle本のAmazonポイント�
 * Kindle以外の場合、特選タイムセールの割引率
 
 ### devコンソール出力する閾値設定
-`const CONSOLE_OUTPUT_RATE = 30;`
+content.js
+```js
+const CONSOLE_OUTPUT_RATE = 30;
+```
 
 ## インストール方法
 1. githubから、git clone か zipダウンロードでローカルにダウンロードする
@@ -23,8 +26,3 @@ https://github.com/sytkm/PointsintheWishlist
 
 ## 注意
 本を購入する場合は、必ず商品ページでポイントに間違いがないことを確認してから購入してください
-
-## License
-Copyright (c) 2023 tacores
-Released under the MIT license
-http://opensource.org/licenses/mit-license.php
