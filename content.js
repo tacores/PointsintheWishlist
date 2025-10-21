@@ -83,11 +83,24 @@ function wishpoints(){
 			}
 		}
 
+		// クーポン
+		const coupon = doc.getElementsByClassName("promoPriceBlockMessage");
+		let coupon_rate = 0;
+		if(coupon.length > 0) {
+			const match = coupon[0].innerText.match(/\d+% OFF/);
+			if(match) {
+				coupon_rate = parseInt(match[0].replace('% OFF', ''));
+			}
+		}
+
 		if( rate >= CONSOLE_OUTPUT_RATE) {
 			console.log(title + " " + rate + "%（ポイント）");
 		}
 		if( price_drop_rate >= CONSOLE_OUTPUT_RATE) {
 			console.log(title + " " + price_drop_rate + "%（価格）");
+		}
+		if( coupon_rate > 0) {
+			console.log(title + " " + coupon_rate + "%（クーポン）");
 		}
 
 		//debug
