@@ -32,26 +32,31 @@ function wishpoints(){
 		const doc = dom_parser.parseFromString(text, "text/html");
 		const title = doc.getElementsByTagName('title')[0].innerText.split('|')[0];
 		const kindle_price = doc.getElementById('kindle-price');
+		//debug
+		//console.log(title)
+		//debug
 
 		// Kindle以外の場合、特選タイムセールだけチェックする
-		if (kindle_price == undefined) {
-			let deal_rich_rate = 0;
-			const deal_rich = item.parentElement.parentElement.getElementsByClassName("wl-deal-rich-badge-label");
-			if(deal_rich.length > 0) {
-				const match = deal_rich[0].innerText.match(/\d+%/);
-				if(match) {
-					deal_rich_rate = parseInt(match[0].replace('%', ''));
-				}
-			}
-			if( deal_rich_rate >= CONSOLE_OUTPUT_RATE ) {
-				const title_no_kindle = doc.getElementsByTagName('title')[0].innerText.split('|')[1].trim();
-				console.log(title_no_kindle + " " + deal_rich_rate + "%（特選タイムセール）");
-			}
-			return;
-		}
+		// if (kindle_price == undefined) {
+		// 	let deal_rich_rate = 0;
+		// 	const deal_rich = item.parentElement.parentElement.getElementsByClassName("wl-deal-rich-badge-label");
+		// 	if(deal_rich.length > 0) {
+		// 		const match = deal_rich[0].innerText.match(/\d+%/);
+		// 		if(match) {
+		// 			deal_rich_rate = parseInt(match[0].replace('%', ''));
+		// 		}
+		// 	}
+		// 	if( deal_rich_rate >= CONSOLE_OUTPUT_RATE ) {
+		// 		const title_no_kindle = doc.getElementsByTagName('title')[0].innerText.split('|')[1].trim();
+		// 		console.log(title_no_kindle + " " + deal_rich_rate + "%（特選タイムセール）");
+		// 	}
+		// 	return;
+		// }
 
-		const price = kindle_price.textContent.trim().replace(/,/g, "").match(/\d+/g)[0];
+		//const price = kindle_price.textContent.trim().replace(/,/g, "").match(/\d+/g)[0];
+		const price = doc.getElementsByClassName('a-price-whole')[0].textContent.trim().replace(/,/g, "").match(/\d+/g)[0];
 		const lopoints = doc.getElementsByClassName("loyalty-points");
+
 		//debug
 		//console.log(lopoints);
 		//loyalty-pointsがない場合にはエラーが出るため存在判定
@@ -70,6 +75,15 @@ function wishpoints(){
 				rate = parseInt(matches[0] / price * 100);
 				const point_text = matches[0] + "ポイント (" + rate + "%)";
 				item.firstElementChild.insertAdjacentHTML("beforeend", " " + point_text);
+			} else {
+				const pointsapex = doc.getElementsByClassName("points-breakdown-table-column-apex");
+				if(pointsapex.length != 0) {
+					points = pointsapex[1].children[0].innerText.trim();
+					const matches = points.match(/\d+/g);	//（例）+30 pt (5%)
+					rate = parseInt(matches[0] / price * 100);
+					const point_text = matches[0] + "ポイント (" + rate + "%)";
+					item.firstElementChild.insertAdjacentHTML("beforeend", " " + point_text);
+			} 
 			}
 		}
 
